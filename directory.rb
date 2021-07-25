@@ -14,8 +14,10 @@ def input_students
     cohort = gets.chomp
     cohort = "July" if cohort.empty?
     # add the student hash to the array
-    students << {name: name, cohort: cohort.capitalize}
-    puts "Now we have #{students.count} students."
+    students << {name: name.capitalize, cohort: cohort.capitalize}
+    output = "Now we have #{students.count} student"
+    students.count > 1 ? output.concat("s.") : output.concat(".")
+    puts output
     # get another name from the user
     puts "What is the next student's name?"
     name = gets.chomp
@@ -38,11 +40,18 @@ def print(students)
 end
 
 def print_footer(students)
+  puts "-------------".center(50)
   puts "Overall, we have #{students.count} great students"
   .center(50)
 end
 
 students = input_students
+
+if students.empty?
+  puts "No students were entered." 
+  return 
+end
+
 #nothing happens until we call the methods
 print_header
 print(students)
