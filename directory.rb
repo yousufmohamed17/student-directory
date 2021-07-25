@@ -1,9 +1,9 @@
+# create an empty array
+@students = []
+
 def input_students
-  # create an empty array
-  students = []
-  
   # get the first name
-  puts "Please enter the first student's name."
+  puts "Please enter the a student's name."
   puts "To finish, just leave blank and hit return."
   name = gets.chomp
 
@@ -14,17 +14,14 @@ def input_students
     cohort = gets.chomp
     cohort = "July" if cohort.empty?
     # add the student hash to the array
-    students << {name: name.capitalize, cohort: cohort.capitalize}
-    output = "Now we have #{students.count} student"
-    students.count > 1 ? output.concat("s.") : output.concat(".")
+    @students << {name: name.capitalize, cohort: cohort.capitalize}
+    output = "Now we have #{@students.count} student"
+    @students.count > 1 ? output.concat("s.") : output.concat(".")
     puts output
     # get another name from the user
     puts "What is the next student's name?"
     name = gets.chomp
   end
-
-  # return the array of students
-  students
 end
 
 def print_header
@@ -32,46 +29,53 @@ def print_header
   puts "-------------".center(50)
 end
 
-def print(students)
-  students.sort_by { |student| student[:cohort] }.each_with_index do 
+def print_students_list
+  @students.sort_by { |student| student[:cohort] }.each_with_index do 
   |student, i| puts "#{i + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
   .center(50)
   end
 end
 
-def print_footer(students)
+def print_footer
   puts "-------------".center(50)
-  puts "Overall, we have #{students.count} great students"
+  puts "Overall, we have #{@students.count} great students"
   .center(50)
 end
 
-def interactive_menu
-  students = []
-  loop do
-    # print the menu and ask the user what to do
-    puts "What would you like to do?"
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "9. Exit" # 9 because we'll be adding more items
-    # read the input and save it into a variable
-    selection = gets.chomp
-    # do what the user has asked
-    case selection
+def print_menu
+  puts "What would you like to do?"
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit" # 9 because we'll be adding more items
+end
+
+def show_students
+  if @students.empty?
+    puts "No students were entered." 
+    return
+  end
+  print_header
+  print_students_list
+  print_footer
+end
+
+def process(selection)
+  case selection
     when "1"
-      students = input_students
+      input_students
     when "2"
-      if students.empty?
-        puts "No students were entered." 
-        next 
-      end
-      print_header
-      print(students)
-      print_footer(students)
+      show_students
     when "9"
-      exit # this will cause the program to terminate
+      exit
     else
-      puts "I don't know what you meant, try again"
-    end
+      puts "I don't know what you mean, try again"
+  end
+end
+
+def interactive_menu
+  loop do
+    print_menu
+    process(gets.chomp)
   end
 end
 
