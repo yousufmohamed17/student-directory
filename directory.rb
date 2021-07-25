@@ -5,17 +5,17 @@ def input_students
   # get the first name
   puts "Please enter a student's name."
   puts "To finish, just leave blank and hit return."
-  name = gets.chomp
+  name = STDIN.gets.chomp
 
   # while the name is not empty, repeat this code
   while !name.empty? do
     # get the cohort
     puts "What is their cohort? Leave blank if you don't know."
-    cohort = gets.chomp
+    cohort = STDIN.gets.chomp
     # check for typos
     loop do
       puts "Are you happy with your input #{name} (cohort: #{cohort})? Please enter yes or no."
-      response = gets.chomp.downcase
+      response = STDIN.gets.chomp.downcase
       if response == "yes"
         break
       elsif response == "no"
@@ -30,7 +30,7 @@ def input_students
     puts "Now we have #{@students.count} student#{"s" if @students.size !=1}."
     # get another name from the user
     puts "What is the next student's name?"
-    name = gets.chomp
+    name = STDIN.gets.chomp
   end
 end
 
@@ -54,7 +54,7 @@ end
 
 def print_menu
   puts "What would you like to do?"
-  puts "1. Input the students"
+  puts "1. Input students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
   puts "4. Load the list from students.csv"
@@ -100,20 +100,33 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
-  name, cohort = line.chomp.split(',')
+    name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort}
   end
   file.close
 end
 
-def interactive_menu
-  loop do
-    print_menu
-    process(gets.chomp)
+def try_load_students
+  filename = ARGV.first # first argument from the command line
+  return if filename.nil? # get out of the method if it isn't given
+  if File.exists?(filename) # if it exists
+    load_students(filename)
+     puts "Loaded #{@students.count} student#{ "s" if @students.count > 1 } from #{filename}"
+  else # if it doesn't exist
+    puts "Sorry, #{filename} doesn't exist."
+    exit # quit the program
   end
 end
 
+def interactive_menu
+  loop do
+    print_menu
+    process(STDIN.gets.chomp)
+  end
+end
+
+try_load_students
 interactive_menu
