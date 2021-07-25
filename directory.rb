@@ -3,7 +3,7 @@
 
 def input_students
   # get the first name
-  puts "Please enter the a student's name."
+  puts "Please enter a student's name."
   puts "To finish, just leave blank and hit return."
   name = gets.chomp
 
@@ -12,6 +12,18 @@ def input_students
     # get the cohort
     puts "What is their cohort? Leave blank if you don't know."
     cohort = gets.chomp
+    # check for typos
+    loop do
+      puts "Are you happy with your input #{name} (cohort: #{cohort})? Please enter yes or no."
+      response = gets.chomp.downcase
+      if response == "yes"
+        break
+      elsif response == "no"
+        input_students
+      else
+      end
+    end
+    # set default cohort
     cohort = "July" if cohort.empty?
     # add the student hash to the array
     @students << {name: name.capitalize, cohort: cohort.capitalize}
