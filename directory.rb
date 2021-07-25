@@ -15,9 +15,7 @@ def input_students
     cohort = "July" if cohort.empty?
     # add the student hash to the array
     @students << {name: name.capitalize, cohort: cohort.capitalize}
-    output = "Now we have #{@students.count} student"
-    @students.count > 1 ? output.concat("s.") : output.concat(".")
-    puts output
+    puts "Now we have #{@students.count} student#{"s" if @students.size !=1}."
     # get another name from the user
     puts "What is the next student's name?"
     name = gets.chomp
